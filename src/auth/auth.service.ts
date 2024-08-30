@@ -1,6 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import {JwtService} from '@nestjs/jwt';
+import { Role } from './enums/roles.enums';
 
 type authPayload = {
     username: string,
@@ -9,12 +10,14 @@ type authPayload = {
 
 type signInPayload = {
     userId: number,
-    username: string
+    username: string,
+    role: Role[]
 };
 type authResponse = {
     accessToken: string,
     userId: number,
-    username:string
+    username:string,
+    role: Role[]
 };
 
 @Injectable()
@@ -37,7 +40,8 @@ export class AuthService {
         if(user && user.password === input.password) {
             return {
                 userId: user.userId,
-                username: user.username
+                username: user.username,
+                role: user.role
             };
         }
         return null;
@@ -46,13 +50,15 @@ export class AuthService {
     async signIn(user: signInPayload): Promise<authResponse> {
         const tokenPayload = {
             sub: user.userId,
-            username:user.username
+            username:user.username,
+            role: user.role
         };
         const accessToken = await this.jwtService.signAsync(tokenPayload);
         return {
             accessToken,
             username: user.username,
-            userId: user.userId
+            userId: user.userId,
+            role: user.role
         }
     }
 }
