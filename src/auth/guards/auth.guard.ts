@@ -1,6 +1,7 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { JwtService } from "@nestjs/jwt";
+import { permission } from "process";
 import { IS_PUBLIC_KEY } from "src/configs/public-key";
 
 @Injectable()
@@ -29,11 +30,12 @@ export class AuthGuard implements CanActivate {
             request.user = {
                 userId: tokenPayload.sub,
                 Username: tokenPayload.username,
-                role: tokenPayload.role
+                role: tokenPayload.role,
+                permission: tokenPayload.permission
             }
             return true;
         } catch (err) {
-            throw new UnauthorizedException();
+            throw new UnauthorizedException('Invalid token');
         }
     }
 }

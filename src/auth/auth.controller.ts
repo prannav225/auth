@@ -4,6 +4,8 @@ import { Roles } from './decorators/roles.decorators';
 import { Role } from './enums/roles.enums';
 import { AuthGuard } from './guards/auth.guard';
 import { RolesGuard } from './guards/roles/roles.guard';
+import { requirePermissions } from './decorators/permissions.decorator';
+import { Permission } from './enums/permissions.enums';
 
 @Controller('auth')
 export class AuthController {
@@ -15,9 +17,10 @@ export class AuthController {
         return this.authService.authenticate(input);
     }
     
-    @Roles(Role.ADMIN, Role.EDITOR)
-    @UseGuards(AuthGuard, RolesGuard)
     @Get('me')
+    @requirePermissions(Permission.CREATE_USER, Permission.EDIT_USER)
+    // @Roles(Role.ADMIN, Role.EDITOR)
+    @UseGuards(AuthGuard, RolesGuard)
     getUserInfo(@Request() request) {
        return request.user
     }
