@@ -10,7 +10,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import config from 'ormcongif';
 
 @Module({
-  imports: [AuthModule, UsersModule, CommentModule, TypeOrmModule.forRoot(config)],
+  imports: [AuthModule, UsersModule, CommentModule],
   controllers: [AppController, UsersController],
   providers: [AppService, UsersService],
 })
